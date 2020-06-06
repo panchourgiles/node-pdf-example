@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+  <script>
+    var API_URL = 'http://localhost:5000'
+    function getPDF() {
+      return axios.get(`${API_URL}/puppeteer`, {
+        responseType: 'arraybuffer',
+        headers: {
+          'Accept': 'application/pdf'
+        }
+      })
+    }
+      
+    function savePDF() {
+      console.log('call PDF');
+      return getPDF() // API call
+        .then((response) => {
+          const blob = new Blob([response.data], {type: 'application/pdf'})
+          const link = document.createElement('a')
+          link.href = window.URL.createObjectURL(blob)
+          link.download = `mypdf.pdf`
+          link.click()
+        })
+      .catch(err => console.log('ERROR'))
+    }
+  </script>
+</head>
+<body>
+  Mostrar PDF
+  <button onClick={savePDF()}>Save as PDF</button>
+</body>
+</html>
